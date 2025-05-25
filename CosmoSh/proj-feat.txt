@@ -1,0 +1,95 @@
+**Minishell Project Outline**
+
+---
+
+**Mandatory Features:**
+
+1. **Command Parsing and Execution**
+   - Tokenize user input.
+   - Execute commands via `fork()` and `execvp()`.
+   - Support basic built-ins (`cd`, `exit`, `export`, `unset`).
+
+2. **PATH Search**
+   - Search executable in directories listed in the PATH environment variable.
+
+3. **I/O Redirection**
+   - `< file` for stdin redirection.
+   - `> file` and `>> file` for stdout (overwrite and append).
+   - Use `open()`, `dup2()`, and `close()`.
+
+4. **Pipelines**
+   - Support chaining commands with `|`.
+   - Use `pipe()`, `fork()`, and `dup2()` to connect commands.
+
+5. **Background Execution**
+   - Recognize `&` at end of commands to avoid waiting with `waitpid(WNOHANG)`.
+
+6. **Basic Signal Handling**
+   - Ignore `SIGINT` in shell but forward it to child processes.
+   - Handle `SIGCHLD` to reap zombies.
+
+7. **Environment Variables**
+   - Handle variable expansion (e.g., `$HOME`, `$PATH`).
+   - Manage environment with `getenv()`, `setenv()`, `unsetenv()`.
+
+---
+
+**Optional Features:**
+
+1. **Job Control**
+   - Commands like `fg`, `bg`, `%n`.
+   - Manage process groups and terminal control.
+
+2. **Command History**
+   - Maintain a history buffer.
+   - Implement navigation with up/down arrows (use `readline` or custom `termios` work).
+
+3. **Tab Completion**
+   - Complete file names and commands.
+
+4. **Alias Support**
+   - Support defining aliases like `alias ll='ls -l'`.
+
+5. **Job Status Prompt**
+   - Display background job completion status.
+
+6. **Command Substitution**
+   - Implement backtick `` `command` `` or `$(command)` substitution.
+
+7. **Wildcards and Globbing**
+   - Expand wildcards (`*`, `?`, `[a-z]`) in arguments.
+
+8. **Scripting Features**
+   - Allow simple control structures: `if`, `while`, `for`.
+
+9. **Arithmetic Expansion**
+   - Handle `$((expression))` evaluation.
+
+10. **Customizable Prompt**
+    - Display current directory, user, last command status, with colors.
+
+---
+
+**OS Concepts Covered:**
+
+- **Process Management**: `fork()`, `exec()`, `waitpid()`, process groups.
+- **Inter-Process Communication**: `pipe()`, file descriptors, redirection.
+- **Signal Handling**: `SIGINT`, `SIGCHLD`, `SIGTSTP`, `kill()`, signal masking.
+- **Environment Management**: Inheriting, modifying, and expanding environment variables.
+- **Terminal Handling**: `termios`, line editing, job control.
+- **Filesystem Operations**: Opening, reading, and writing files.
+- **Memory Management**: Proper handling of dynamic memory (`malloc()`, `free()`).
+- **Error Handling**: Managing system call failures robustly.
+
+---
+
+**Implementation Tips:**
+
+- Organize your shell into Lexer, Parser, Executor modules.
+- Represent commands as structured data (e.g., AST or linked lists).
+- Ensure careful resource management (close file descriptors, free memory).
+- Modularize built-in commands vs external command execution.
+- Add a debug mode early to inspect process creations and I/O setups.
+- Write test scripts to validate basic functionality and edge cases.
+
+
